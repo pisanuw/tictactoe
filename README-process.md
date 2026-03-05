@@ -8,7 +8,7 @@ Yusuf Pisan
 
 This is my interaction with Github CoPilot through the Visual Studio Code chat interface on 5 March 2026. Github CoPilot uses Claude Haiku 4.5 • 0.3x
 
-Tic-Tac-Toe is an east ot understand game that most people are familiar with. I have used this game in courses to teach how 2-player games work and how computer AI can be structured as an opponent and how AI can be improved. Structurally, it is not much different than Chess, Go, Connect-4 and other 2-person games. The other games just have larger search spaces, so require additional techniques for pruning and exploring the search space.
+Tic-Tac-Toe is an easy to understand game that most people are familiar with. I have used this game in courses to teach how 2-player games work and how computer AI can be structured as an opponent and how AI can be improved. Structurally, it is not much different than Chess, Go, Connect-4 and other 2-person games. The other games just have larger search spaces, so require additional techniques for pruning and exploring the search space.
 
 Now, in 2026, generative AI can write this game from scratch. I can no longer assign this game as a homework when students can easily get the answer from AI. By not building the game from scratch, students lose a learning opportunity. After all, creating the game was never the goal; learning how to program, learning how to handle user input, how to generate and prune search spaces, how to decide among choices was the goal.
 
