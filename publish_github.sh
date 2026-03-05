@@ -29,7 +29,7 @@ while [[ $# -gt 0 ]]; do
 Usage: ./publish_github.sh [--owner OWNER] [--repo REPO] [--private|--public]
 
 Requires:
-  - GITHUB_TOKEN env var with repo scope
+  - GITHUB_TOKEN or GH_TOKEN env var with repo scope
 
 Defaults:
   OWNER=pisanuw
@@ -56,8 +56,10 @@ if ! command -v curl >/dev/null 2>&1; then
   exit 1
 fi
 
-if [[ -z "${GITHUB_TOKEN:-}" ]]; then
-  echo "Error: GITHUB_TOKEN is not set."
+TOKEN="${GITHUB_TOKEN:-${GH_TOKEN:-}}"
+
+if [[ -z "${TOKEN}" ]]; then
+  echo "Error: GITHUB_TOKEN or GH_TOKEN is not set."
   echo "Create a token with repo permissions and run:"
   echo "  GITHUB_TOKEN=YOUR_TOKEN ./publish_github.sh"
   exit 1
@@ -70,7 +72,7 @@ fi
 
 echo "Checking if repository exists: ${OWNER}/${REPO}"
 STATUS="$(curl -s -o /tmp/github_repo_check.json -w "%{http_code}" \
-  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+  -H "Authorization: Bearer ${TOKEN}" \
   -H "Accept: application/vnd.github+json" \
   "https://api.github.com/repos/${OWNER}/${REPO}")"
 
@@ -78,7 +80,7 @@ if [[ "${STATUS}" == "404" ]]; then
   echo "Repository not found. Creating ${OWNER}/${REPO}..."
   CREATE_STATUS="$(curl -s -o /tmp/github_repo_create.json -w "%{http_code}" \
     -X POST \
-    -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+    -H "Authorization: Bearer ${TOKEN}" \
     -H "Accept: application/vnd.github+json" \
     https://api.github.com/user/repos \
     -d "{\"name\":\"${REPO}\",\"description\":\"${DESCRIPTION}\",\"private\":${PRIVATE}}")"
