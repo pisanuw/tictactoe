@@ -16,6 +16,10 @@ Now, in 2026, generative AI can write this game from scratch. I can no longer as
 
 **HOW we do that is the question I am exploring.**
 
+Cloud based app is at https://tictactoe-pro-3s6b6e6pga-uc.a.run.app/
+
+**Amusing glitch**: You can make multiple moves while AI is "thinking". Let's you win against even in hard mode.
+
 Yusuf Pisan
 
 ----
