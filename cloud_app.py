@@ -163,17 +163,23 @@ def _status(board: List[List[str]]) -> str:
     return "in_progress"
 
 
-@app.get("/")
+@app.route("/")
 def index():
     return render_template_string(PAGE_HTML)
 
 
-@app.get("/healthz")
+@app.route("/healthz", methods=["GET"])
 def healthz():
     return jsonify({"status": "ok"}), 200
 
 
-@app.post("/api/ai-move")
+@app.route("/health", methods=["GET"])
+def health():
+    """Alternate health check endpoint"""
+    return "OK", 200
+
+
+@app.route("/api/ai-move", methods=["POST"])
 def ai_move():
     payload = request.get_json(silent=True) or {}
     board = payload.get("board")
