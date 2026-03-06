@@ -97,7 +97,8 @@ if [[ -n "${PROJECT_ID}" && "${PROJECT_ID}" != "(unset)" ]]; then
     FAILED=1
   fi
 
-  BILLING_ENABLED="$(gcloud beta billing projects describe "${PROJECT_ID}" --format='value(billingEnabled)' 2>/dev/null || true)"
+  # Use timeout to prevent hanging on billing check
+  BILLING_ENABLED="$(timeout 10s gcloud beta billing projects describe "${PROJECT_ID}" --format='value(billingEnabled)' 2>/dev/null || true)"
   if [[ "${BILLING_ENABLED}" == "True" || "${BILLING_ENABLED}" == "true" ]]; then
     pass "Billing enabled"
   elif [[ -z "${BILLING_ENABLED}" ]]; then
@@ -124,7 +125,8 @@ REQUIRED_APIS=(
 )
 
 if [[ -n "${PROJECT_ID}" && "${PROJECT_ID}" != "(unset)" ]]; then
-  ENABLED_APIS="$(gcloud services list --enabled --project "${PROJECT_ID}" --format='value(config.name)' 2>/dev/null || true)"
+  # Use timeout to prevent hanging when listing APIs
+  ENABLED_APIS="$(timeout 15s gcloud services list --enabled --project "${PROJECT_ID}" --format='value(config.name)' 2>/dev/null || true)"
 
   MISSING_APIS=()
   for api in "${REQUIRED_APIS[@]}"; do
@@ -139,7 +141,7 @@ if [[ -n "${PROJECT_ID}" && "${PROJECT_ID}" != "(unset)" ]]; then
   if [[ ${#MISSING_APIS[@]} -gt 0 ]]; then
     if [[ "${FIX_MISSING_APIS}" == "true" ]]; then
       echo "Enabling missing APIs..."
-      gcloud services enable --project "${PROJECT_ID}" "${MISSING_APIS[@]}"
+      timeout 60s gcloud services enable --project "${PROJECT_ID}" "${MISSING_APIS[@]}" || warn "API enable timed out or failed"
       pass "Missing APIs enabled"
     else
       echo "Run with --fix to enable missing APIs automatically."

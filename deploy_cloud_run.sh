@@ -74,10 +74,12 @@ echo "Image:   ${IMAGE}"
 gcloud config set project "${PROJECT_ID}" >/dev/null
 
 echo "Enabling required APIs..."
-gcloud services enable \
+timeout 60s gcloud services enable \
   run.googleapis.com \
   cloudbuild.googleapis.com \
-  artifactregistry.googleapis.com
+  artifactregistry.googleapis.com || {
+    echo "Warning: API enable timed out or failed. Attempting to continue..."
+  }
 
 echo "Building container image with Cloud Build..."
 gcloud builds submit \

@@ -60,6 +60,7 @@ PAGE_HTML = """
       [' ', ' ', ' ']
     ];
     let gameOver = false;
+    let isProcessing = false;
 
     function renderBoard() {
       const boardEl = document.getElementById('board');
@@ -69,7 +70,7 @@ PAGE_HTML = """
           const cell = document.createElement('button');
           cell.className = 'cell';
           cell.textContent = board[r][c] === ' ' ? '' : board[r][c];
-          cell.disabled = gameOver || board[r][c] !== ' ';
+          cell.disabled = gameOver || board[r][c] !== ' ' || isProcessing;
           cell.addEventListener('click', () => playerMove(r, c));
           boardEl.appendChild(cell);
         }
@@ -83,12 +84,15 @@ PAGE_HTML = """
     function resetGame() {
       board = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
       gameOver = false;
+      isProcessing = false;
       setStatus('Your turn');
       renderBoard();
     }
 
     async function playerMove(row, col) {
-      if (gameOver || board[row][col] !== ' ') return;
+      if (gameOver || board[row][col] !== ' ' || isProcessing) return;
+
+      isProcessing = true;
       board[row][col] = 'X';
       renderBoard();
 
@@ -103,12 +107,13 @@ PAGE_HTML = """
 
       if (!response.ok) {
         setStatus('Error contacting server');
+        isProcessing = false;
+        renderBoard();
         return;
       }
 
       const result = await response.json();
       board = result.board;
-      renderBoard();
 
       if (result.status === 'x_won') {
         gameOver = true;
@@ -122,6 +127,9 @@ PAGE_HTML = """
       } else {
         setStatus('Your turn');
       }
+
+      isProcessing = false;
+      renderBoard();
     }
 
     document.getElementById('newGame').addEventListener('click', resetGame);

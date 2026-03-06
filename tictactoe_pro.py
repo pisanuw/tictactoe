@@ -222,6 +222,8 @@ class GameStats:
             'top_games': top_games
         }
 
+
+class TicTacToeProLevel:
     """Challenge level definition"""
     def __init__(self, name, board, player_to_move='X', goal="Win in 3 moves or less"):
         self.name = name
@@ -305,8 +307,10 @@ class TicTacToePro:
         self.practice_mode = False
 
         # Replay and tournament state
+        self.replay_mode = False
         self.current_replay = None
         self.replay_move_index = 0
+        self.replay_info_label = None
         self.tournament_series = []
         self.tournament_results = []
         self.tournament_round = 0
@@ -500,8 +504,13 @@ class TicTacToePro:
         top_frame.pack(fill='x', padx=10, pady=10)
 
         title_font = font.Font(family="Arial", size=20, weight="bold")
-        if self.game_mode == 'single':
-            mode_text = f"Single Player - {self.difficulty.upper()} AI"
+        if self.game_mode in ('single', 'blitz', 'daily_challenge'):
+            if self.game_mode == 'blitz':
+                mode_text = f"⚡ Blitz Mode - {self.difficulty.upper()} AI"
+            elif self.game_mode == 'daily_challenge':
+                mode_text = "📅 Daily Challenge"
+            else:
+                mode_text = f"Single Player - {self.difficulty.upper()} AI"
         else:
             mode_text = "Two Players"
 
@@ -570,7 +579,7 @@ class TicTacToePro:
 
         self.update_board_display()
 
-        if self.game_mode == 'single' and self.current_player == self.ai_player:
+        if self.game_mode in ('single', 'blitz', 'daily_challenge') and self.current_player == self.ai_player:
             self.root.after(500, self.make_ai_move)
 
     def create_board(self):
@@ -685,6 +694,7 @@ class TicTacToePro:
             row, col = move
             self.board[row][col] = self.ai_player
             self.move_history.append((row, col, self.ai_player))
+            self.update_board_display()
 
             if self.check_winner(self.board, self.ai_player):
                 self.end_game('loss')
@@ -692,28 +702,27 @@ class TicTacToePro:
                 self.end_game('draw')
             else:
                 self.current_player = self.human_player
-                self.update_board_display()
 
     def on_board_click(self, row, col):
         """Handle board click"""
         if not self.game_active or self.board[row][col] != ' ':
             return
 
-        if self.game_mode == 'single' and self.current_player != self.human_player:
+        if self.game_mode in ('single', 'blitz', 'daily_challenge') and self.current_player != self.human_player:
             return
 
         self.board[row][col] = self.current_player
         self.move_history.append((row, col, self.current_player))
+        self.update_board_display()
 
         if self.check_winner(self.board, self.current_player):
             self.end_game('win' if self.current_player == self.human_player else 'loss')
         elif self.board_full(self.board):
             self.end_game('draw')
         else:
-            self.current_player = self.ai_player if self.game_mode == 'single' else ('O' if self.current_player == 'X' else 'X')
-            self.update_board_display()
+            self.current_player = self.ai_player if self.game_mode in ('single', 'blitz', 'daily_challenge') else ('O' if self.current_player == 'X' else 'X')
 
-            if self.game_mode == 'single' and self.current_player == self.ai_player:
+            if self.game_mode in ('single', 'blitz', 'daily_challenge') and self.current_player == self.ai_player:
                 self.root.after(500, self.make_ai_move)
 
     def update_board_display(self):
@@ -724,7 +733,9 @@ class TicTacToePro:
                 color = self.theme['x_color'] if cell == 'X' else (self.theme['o_color'] if cell == 'O' else self.theme['text'])
                 self.board_buttons[i][j].config(text=cell, fg=color)
 
-        self.status_label.config(text=f"{self.current_player}'s Turn")
+        # Only update status label if it exists (not in replay mode)
+        if hasattr(self, 'status_label') and self.status_label:
+            self.status_label.config(text=f"{self.current_player}'s Turn")
 
     def show_hint(self):
         """Show hint for best move"""
@@ -740,7 +751,7 @@ class TicTacToePro:
 
     def undo_move(self):
         """Undo last move"""
-        if len(self.move_history) < (2 if self.game_mode == 'single' else 1):
+        if len(self.move_history) < (2 if self.game_mode in ('single', 'blitz', 'daily_challenge') else 1):
             messagebox.showwarning("Cannot Undo", "No moves to undo!")
             return
 
@@ -749,8 +760,8 @@ class TicTacToePro:
         row, col, _ = self.move_history.pop()
         self.board[row][col] = ' '
 
-        # Undo AI move if in single player
-        if self.game_mode == 'single' and self.move_history:
+        # Undo AI move if playing against AI
+        if self.game_mode in ('single', 'blitz', 'daily_challenge') and self.move_history:
             row, col, _ = self.move_history.pop()
             self.board[row][col] = ' '
 
@@ -907,30 +918,47 @@ class TicTacToePro:
                            font=("Arial", 14), bg=self.theme['bg'], fg=self.theme['text'])
             info.pack(pady=30)
         else:
-            # Create scrollable list
-            scrolled_text = scrolledtext.ScrolledText(main_frame, height=20, width=70,
-                                                     bg=self.theme['button'],
-                                                     fg=self.theme['text'],
-                                                     font=("Arial", 11))
-            scrolled_text.pack(pady=15, fill='both', expand=True)
+            # Create frame for games list with radio buttons
+            list_frame = tk.Frame(main_frame, bg=self.theme['bg'])
+            list_frame.pack(pady=15, fill='both', expand=True)
 
-            for idx, game in enumerate(reversed(games[-10:])):  # Show last 10 games
+            # Scrollbar
+            scrollbar = tk.Scrollbar(list_frame, bg=self.theme['button'])
+            scrollbar.pack(side='right', fill='y')
+
+            # Canvas and frame inside for scrolling
+            canvas = tk.Canvas(list_frame, bg=self.theme['button'], highlightthickness=0, yscrollcommand=scrollbar.set)
+            canvas.pack(side='left', fill='both', expand=True)
+            scrollbar.config(command=canvas.yview)
+
+            scrollable_frame = tk.Frame(canvas, bg=self.theme['button'])
+            canvas.create_window((0, 0), window=scrollable_frame, anchor='nw')
+
+            self.selected_replay = tk.IntVar()
+            game_list = list(reversed(games[-10:]))  # Show last 10 games in reverse order
+
+            for idx, game in enumerate(game_list):
                 timestamp = datetime.fromisoformat(game['timestamp']).strftime("%Y-%m-%d %H:%M")
                 mode = game['mode']
                 result = game['result'].upper()
                 duration = game['duration']
                 moves_count = len(game.get('moves', []))
 
-                gameinfo = f"[{idx+1}] {timestamp} | {mode.title()} | Result: {result} | Duration: {duration}s | Moves: {moves_count}\n"
-                scrolled_text.insert(tk.END, gameinfo)
+                game_text = f"{timestamp} | {mode.title()} | {result} | {duration}s | Moves: {moves_count}"
 
-            scrolled_text.config(state='disabled')
+                radio_btn = tk.Radiobutton(scrollable_frame, text=game_text, variable=self.selected_replay,
+                                          value=idx, bg=self.theme['button'], fg=self.theme['text'],
+                                          selectcolor=self.theme['accent'], font=("Arial", 11))
+                radio_btn.pack(anchor='w', padx=10, pady=5)
+
+            scrollable_frame.update_idletasks()
+            canvas.config(scrollregion=canvas.bbox('all'))
 
             btn_font = font.Font(family="Arial", size=12)
             replay_btn = tk.Button(main_frame, text="▶️ Play Selected Replay", font=btn_font,
                                   bg=self.theme['button'], fg=self.theme['text'],
                                   activebackground=self.theme['hover'],
-                                  command=lambda: messagebox.showinfo("Replay", "Select a game to replay (coming soon)"))
+                                  command=lambda: self.play_replay(game_list))
             replay_btn.pack(pady=10)
 
         back_btn = tk.Button(main_frame, text="← Back",
@@ -939,6 +967,183 @@ class TicTacToePro:
                             width=20, height=2,
                             command=self.setup_menu_screen)
         back_btn.pack(pady=10)
+
+    def play_replay(self, game_list):
+        """Play selected game replay"""
+        try:
+            selected_idx = self.selected_replay.get()
+            if selected_idx < 0 or selected_idx >= len(game_list):
+                messagebox.showwarning("No Selection", "Please select a game to replay!")
+                return
+
+            game = game_list[selected_idx]
+            moves = game.get('moves', [])
+
+            if not moves:
+                messagebox.showwarning("No Moves", "This game has no moves to replay.")
+                return
+
+            # Setup replay state
+            self.replay_mode = True
+            self.current_replay = game
+            self.replay_move_index = 0
+            self.board_size = game.get('board_size', 3)
+            self.board = self.create_board()
+            self.move_history = []
+            self.game_active = True
+            self.current_player = 'X'
+            self.human_player = 'X'
+            self.ai_player = 'O'
+
+            # Setup UI
+            self.clear_window()
+            self.root.geometry("800x750")
+            self.setup_replay_screen(moves)
+        except Exception as e:
+            messagebox.showerror("Replay Error", f"Error playing replay: {str(e)}")
+
+    def setup_replay_screen(self, moves):
+        """Setup screen for replay with playback controls"""
+        # Top frame for title
+        top_frame = tk.Frame(self.root, bg=self.theme['bg'])
+        top_frame.pack(fill='x', padx=10, pady=10)
+
+        title_font = font.Font(family="Arial", size=20, weight="bold")
+        title = tk.Label(top_frame, text="📹 Game Replay", font=title_font,
+                        bg=self.theme['bg'], fg=self.theme['accent'])
+        title.pack()
+
+        info_text = f"Replay: {len(moves)} moves | Move: {self.replay_move_index}/{len(moves)}"
+        self.replay_info_label = tk.Label(top_frame, text=info_text, font=("Arial", 12),
+                                          bg=self.theme['bg'], fg=self.theme['text'])
+        self.replay_info_label.pack()
+
+        # Status label to show current state
+        self.status_label = tk.Label(top_frame, text="", font=("Arial", 11),
+                                    bg=self.theme['bg'], fg=self.theme['accent'])
+        self.status_label.pack()
+
+        # Board frame
+        board_frame = tk.Frame(self.root, bg=self.theme['bg'])
+        board_frame.pack(pady=20)
+
+        self.board_buttons = [[None for _ in range(self.board_size)] for _ in range(self.board_size)]
+        btn_size = 8
+        btn_font = font.Font(family="Arial", size=16, weight="bold")
+
+        for i in range(self.board_size):
+            for j in range(self.board_size):
+                btn = tk.Button(board_frame, text=" ", font=btn_font, width=btn_size, height=3,
+                               bg=self.theme['button'], fg=self.theme['text'],
+                               state='disabled')
+                btn.grid(row=i, column=j, padx=5, pady=5)
+                self.board_buttons[i][j] = btn
+
+        # Control frame
+        ctrl_frame = tk.Frame(self.root, bg=self.theme['bg'])
+        ctrl_frame.pack(pady=15)
+
+        btn_font = font.Font(family="Arial", size=11)
+        tk.Button(ctrl_frame, text="⏮️ Start", font=btn_font,
+                 bg=self.theme['button'], fg=self.theme['text'],
+                 activebackground=self.theme['hover'],
+                 command=self.replay_start).pack(side='left', padx=5)
+
+        tk.Button(ctrl_frame, text="⏪ Previous", font=btn_font,
+                 bg=self.theme['button'], fg=self.theme['text'],
+                 activebackground=self.theme['hover'],
+                 command=self.replay_previous).pack(side='left', padx=5)
+
+        tk.Button(ctrl_frame, text="▶️ Play All", font=btn_font,
+                 bg=self.theme['button'], fg=self.theme['text'],
+                 activebackground=self.theme['hover'],
+                 command=lambda: self.replay_auto(moves)).pack(side='left', padx=5)
+
+        tk.Button(ctrl_frame, text="⏩ Next", font=btn_font,
+                 bg=self.theme['button'], fg=self.theme['text'],
+                 activebackground=self.theme['hover'],
+                 command=self.replay_next).pack(side='left', padx=5)
+
+        tk.Button(ctrl_frame, text="⏭️ End", font=btn_font,
+                 bg=self.theme['button'], fg=self.theme['text'],
+                 activebackground=self.theme['hover'],
+                 command=lambda: self.replay_end(moves)).pack(side='left', padx=5)
+
+        tk.Button(ctrl_frame, text="← Back", font=btn_font,
+                 bg=self.theme['button'], fg=self.theme['text'],
+                 activebackground=self.theme['hover'],
+                 command=self.show_replays).pack(side='right', padx=5)
+
+        self.update_board_display()
+
+    def replay_start(self):
+        """Start replay from beginning"""
+        self.replay_move_index = 0
+        self.board = self.create_board()
+        self.move_history = []
+        self.update_board_display()
+        self.update_replay_info()
+
+    def replay_previous(self):
+        """Go to previous move in replay"""
+        if self.replay_move_index > 0:
+            self.replay_move_index -= 1
+            self.board = self.create_board()
+            self.move_history = []
+            # Replay moves up to current index
+            moves = self.current_replay.get('moves', [])
+            for i in range(self.replay_move_index):
+                if i < len(moves):
+                    row, col, player = moves[i]
+                    self.board[row][col] = player
+                    self.move_history.append((row, col, player))
+            self.update_board_display()
+            self.update_replay_info()
+
+    def replay_next(self):
+        """Go to next move in replay"""
+        moves = self.current_replay.get('moves', [])
+        if self.replay_move_index < len(moves):
+            row, col, player = moves[self.replay_move_index]
+            self.board[row][col] = player
+            self.move_history.append((row, col, player))
+            self.replay_move_index += 1
+            self.update_board_display()
+            self.update_replay_info()
+
+    def replay_end(self, moves):
+        """Go to end of replay"""
+        self.replay_move_index = len(moves)
+        self.board = self.create_board()
+        self.move_history = []
+        # Replay all moves
+        for row, col, player in moves:
+            self.board[row][col] = player
+            self.move_history.append((row, col, player))
+        self.update_board_display()
+        self.update_replay_info()
+
+    def replay_auto(self, moves):
+        """Auto-play all moves in replay"""
+        if self.replay_move_index == 0:
+            self.board = self.create_board()
+            self.move_history = []
+
+        if self.replay_move_index < len(moves):
+            row, col, player = moves[self.replay_move_index]
+            self.board[row][col] = player
+            self.move_history.append((row, col, player))
+            self.replay_move_index += 1
+            self.update_board_display()
+            self.update_replay_info()
+            self.root.after(500, lambda: self.replay_auto(moves))
+
+    def update_replay_info(self):
+        """Update replay info label"""
+        if self.current_replay:
+            moves = self.current_replay.get('moves', [])
+            info_text = f"Replay: {len(moves)} moves | Move: {self.replay_move_index}/{len(moves)}"
+            self.replay_info_label.config(text=info_text)
 
     def show_challenges(self):
         """Show challenge mode"""

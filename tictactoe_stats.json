@@ -1,0 +1,667 @@
+{
+  "single_easy_wins": 0,
+  "single_easy_losses": 0,
+  "single_easy_draws": 0,
+  "single_medium_wins": 0,
+  "single_medium_losses": 0,
+  "single_medium_draws": 0,
+  "single_hard_wins": 0,
+  "single_hard_losses": 0,
+  "single_hard_draws": 0,
+  "two_player_total": 0,
+  "total_games": 13,
+  "current_streak": 0,
+  "best_streak": 0,
+  "elo_rating": 1440,
+  "blitz_wins": 0,
+  "blitz_losses": 0,
+  "blitz_draws": 4,
+  "speed_challenge_best": 0,
+  "theme": "dark",
+  "sound_enabled": true,
+  "board_size": 3,
+  "ai_speed": "normal",
+  "show_hints": true,
+  "total_time_played": 79,
+  "games_history": [
+    {
+      "timestamp": "2026-03-06T06:27:34.046885",
+      "mode": "single",
+      "difficulty": "hard",
+      "result": "loss",
+      "duration": 4,
+      "board_size": 3,
+      "moves": [
+        [
+          0,
+          2,
+          "X"
+        ],
+        [
+          1,
+          1,
+          "O"
+        ],
+        [
+          2,
+          0,
+          "X"
+        ],
+        [
+          2,
+          1,
+          "O"
+        ],
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          0,
+          1,
+          "O"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:27:54.246225",
+      "mode": "single",
+      "difficulty": "hard",
+      "result": "draw",
+      "duration": 10,
+      "board_size": 3,
+      "moves": [
+        [
+          1,
+          1,
+          "X"
+        ],
+        [
+          2,
+          2,
+          "O"
+        ],
+        [
+          0,
+          2,
+          "X"
+        ],
+        [
+          2,
+          0,
+          "O"
+        ],
+        [
+          2,
+          1,
+          "X"
+        ],
+        [
+          0,
+          1,
+          "O"
+        ],
+        [
+          1,
+          0,
+          "X"
+        ],
+        [
+          1,
+          2,
+          "O"
+        ],
+        [
+          0,
+          0,
+          "X"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:28:10.961587",
+      "mode": "single",
+      "difficulty": "hard",
+      "result": "loss",
+      "duration": 6,
+      "board_size": 3,
+      "moves": [
+        [
+          2,
+          0,
+          "X"
+        ],
+        [
+          1,
+          1,
+          "O"
+        ],
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          2,
+          1,
+          "O"
+        ],
+        [
+          0,
+          1,
+          "X"
+        ],
+        [
+          1,
+          0,
+          "O"
+        ],
+        [
+          0,
+          2,
+          "X"
+        ],
+        [
+          1,
+          2,
+          "O"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:28:28.073590",
+      "mode": "single",
+      "difficulty": "easy",
+      "result": "win",
+      "duration": 6,
+      "board_size": 3,
+      "moves": [
+        [
+          0,
+          2,
+          "X"
+        ],
+        [
+          2,
+          0,
+          "O"
+        ],
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          0,
+          0,
+          "O"
+        ],
+        [
+          1,
+          2,
+          "X"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:30:21.652553",
+      "mode": "single",
+      "difficulty": "hard",
+      "result": "loss",
+      "duration": 6,
+      "board_size": 3,
+      "moves": [
+        [
+          0,
+          2,
+          "X"
+        ],
+        [
+          1,
+          1,
+          "O"
+        ],
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          1,
+          2,
+          "O"
+        ],
+        [
+          1,
+          0,
+          "X"
+        ],
+        [
+          2,
+          1,
+          "O"
+        ],
+        [
+          2,
+          0,
+          "X"
+        ],
+        [
+          0,
+          1,
+          "O"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:30:33.240947",
+      "mode": "single",
+      "difficulty": "easy",
+      "result": "win",
+      "duration": 4,
+      "board_size": 3,
+      "moves": [
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          2,
+          0,
+          "O"
+        ],
+        [
+          0,
+          2,
+          "X"
+        ],
+        [
+          1,
+          0,
+          "O"
+        ],
+        [
+          1,
+          2,
+          "X"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:30:58.470234",
+      "mode": "single",
+      "difficulty": "easy",
+      "result": "win",
+      "duration": 9,
+      "board_size": 3,
+      "moves": [
+        [
+          1,
+          1,
+          "X"
+        ],
+        [
+          0,
+          2,
+          "O"
+        ],
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          1,
+          2,
+          "O"
+        ],
+        [
+          0,
+          0,
+          "X"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:31:20.116828",
+      "mode": "single",
+      "difficulty": "hard",
+      "result": "loss",
+      "duration": 9,
+      "board_size": 3,
+      "moves": [
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          0,
+          2,
+          "O"
+        ],
+        [
+          1,
+          2,
+          "X"
+        ],
+        [
+          1,
+          1,
+          "O"
+        ],
+        [
+          2,
+          0,
+          "X"
+        ],
+        [
+          2,
+          1,
+          "O"
+        ],
+        [
+          1,
+          0,
+          "X"
+        ],
+        [
+          0,
+          1,
+          "O"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:33:26.705310",
+      "mode": "single",
+      "difficulty": "easy",
+      "result": "win",
+      "duration": 5,
+      "board_size": 3,
+      "moves": [
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          0,
+          2,
+          "O"
+        ],
+        [
+          2,
+          0,
+          "X"
+        ],
+        [
+          1,
+          1,
+          "O"
+        ],
+        [
+          2,
+          1,
+          "X"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:33:39.403950",
+      "mode": "single",
+      "difficulty": "hard",
+      "result": "loss",
+      "duration": 5,
+      "board_size": 3,
+      "moves": [
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          1,
+          1,
+          "O"
+        ],
+        [
+          0,
+          2,
+          "X"
+        ],
+        [
+          1,
+          2,
+          "O"
+        ],
+        [
+          1,
+          0,
+          "X"
+        ],
+        [
+          2,
+          1,
+          "O"
+        ],
+        [
+          2,
+          0,
+          "X"
+        ],
+        [
+          0,
+          1,
+          "O"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:33:59.239896",
+      "mode": "single",
+      "difficulty": "hard",
+      "result": "draw",
+      "duration": 6,
+      "board_size": 3,
+      "moves": [
+        [
+          1,
+          1,
+          "X"
+        ],
+        [
+          2,
+          0,
+          "O"
+        ],
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          0,
+          0,
+          "O"
+        ],
+        [
+          1,
+          0,
+          "X"
+        ],
+        [
+          1,
+          2,
+          "O"
+        ],
+        [
+          0,
+          2,
+          "X"
+        ],
+        [
+          0,
+          1,
+          "O"
+        ],
+        [
+          2,
+          1,
+          "X"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:36:53.401690",
+      "mode": "single",
+      "difficulty": "easy",
+      "result": "win",
+      "duration": 6,
+      "board_size": 3,
+      "moves": [
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          2,
+          0,
+          "O"
+        ],
+        [
+          0,
+          0,
+          "X"
+        ],
+        [
+          2,
+          1,
+          "O"
+        ],
+        [
+          0,
+          2,
+          "X"
+        ],
+        [
+          1,
+          0,
+          "O"
+        ],
+        [
+          1,
+          2,
+          "X"
+        ]
+      ],
+      "practice": false
+    },
+    {
+      "timestamp": "2026-03-06T06:41:38.265423",
+      "mode": "single",
+      "difficulty": "easy",
+      "result": "win",
+      "duration": 3,
+      "board_size": 3,
+      "moves": [
+        [
+          0,
+          2,
+          "X"
+        ],
+        [
+          2,
+          1,
+          "O"
+        ],
+        [
+          2,
+          2,
+          "X"
+        ],
+        [
+          2,
+          0,
+          "O"
+        ],
+        [
+          1,
+          2,
+          "X"
+        ]
+      ],
+      "practice": false
+    }
+  ],
+  "challenges_completed": 0,
+  "tournament_wins": 0,
+  "daily_challenge_streak": 1,
+  "daily_challenge_best_streak": 1,
+  "last_daily_completed": "2026-03-06",
+  "daily_challenges_total": 1,
+  "top_games": [
+    {
+      "duration": 5,
+      "mode": "blitz",
+      "difficulty": "easy",
+      "result": "win",
+      "score": 5
+    },
+    {
+      "duration": 5,
+      "mode": "blitz",
+      "difficulty": "hard",
+      "result": "loss",
+      "score": 5
+    },
+    {
+      "duration": 9,
+      "mode": "blitz",
+      "difficulty": "easy",
+      "result": "win",
+      "score": 9
+    },
+    {
+      "duration": 9,
+      "mode": "blitz",
+      "difficulty": "hard",
+      "result": "loss",
+      "score": 9
+    }
+  ],
+  "achievements": {
+    "first_win": false,
+    "five_wins": false,
+    "ten_wins": false,
+    "perfect_game": false,
+    "beat_hard": false,
+    "speed_demon": false,
+    "win_streak_5": false,
+    "win_streak_10": false,
+    "challenge_master": false,
+    "tournament_winner": false,
+    "perfect_replay": false,
+    "daily_devotee": true,
+    "week_warrior": false,
+    "blitz_master": false,
+    "speed_runner": false
+  },
+  "single_hard_loss": 5,
+  "single_hard_draw": 2,
+  "single_easy_win": 6
+}
